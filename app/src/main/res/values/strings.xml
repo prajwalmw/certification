@@ -1,0 +1,40 @@
+<resources>
+    <string name="app_name">Moji Master 2</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_add_emoji">Add Emoji</string>
+    <string name="action_list_emoji">Emoji List</string>
+
+    <string name="answer_tag" translatable="false">answer-tag</string>
+    <string name="error_default">Error: 😭</string>
+    <string name="correct_answer">Correct</string>
+    <string name="wrong_answer">Wrong</string>
+    <string name="win_game">Congratulations! \n You\'re a Moji Master!</string>
+
+    <string name="maybe_game">Almost there, keep on trying.</string>
+    <string name="lose_game">Sorry, keep on practicing.</string>
+
+    <string name="activity_smiley_list">Smiley List</string>
+    <string name="activity_add_smiley">Add Smiley</string>
+    <string name="missing_input">Required a two character Emoji</string>
+    <string name="cldr_short_name">CLDR short name</string>
+    <string name="input_emoji">Emoji</string>
+    <string name="equal_sign">-></string>
+    <string name="u">U+</string>
+    <string name="save">Save</string>
+
+    <string name="title_activity_setting">Setting</string>
+    <string name="undo_deleted">Smiley deleted: %1$s</string>
+
+    <string name="pref_key_notification" translatable="false">pref_key_notification</string>
+    <string name="pref_notification_title">Notification</string>
+    <string name="pref_notification_summary">Get a notification about the Smiley of the Day.</string>
+    <string name="pref_key_answers" translatable="false">pref_key_answers</string>
+    <string name="pref_answers_title">Number of answers</string>
+    <string name="pref_answers_summary">Show number of possible answers.</string>
+
+    <string name="notification_channel_id" translatable="false">notify-smiley</string>
+    <string name="notification_channel_name">Remember the Smiley</string>
+    <string name="notification_channel_description">Show random emoji in notification.</string>
+    <string name="notification_title">Smiley of the Day: %1$s - %2$s</string>
+
+</resources>

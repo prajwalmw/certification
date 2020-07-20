@@ -1,0 +1,40 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "entities": [
+      {
+        "tableName": "smiley",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`unicode` TEXT NOT NULL, `name` TEXT, `emoji` TEXT, PRIMARY KEY(`unicode`))",
+        "fields": [
+          {
+            "fieldPath": "mCode",
+            "columnName": "unicode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mName",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "mEmoji",
+            "columnName": "emoji",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "unicode"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ]
+  }
+}
