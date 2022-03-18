@@ -1,8 +1,12 @@
 package com.google.developers.mojimaster2;
 
+import static com.google.developers.mojimaster2.SettingActivity.SettingsFragment.JOB_ID;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,6 +32,7 @@ import com.google.developers.mojimaster2.game.AnswersView;
 import com.google.developers.mojimaster2.game.GameViewModel;
 import com.google.developers.mojimaster2.game.GameViewModelFactory;
 import com.google.developers.mojimaster2.game.Result;
+import com.google.developers.mojimaster2.jobscheduler.NotificationJobService;
 import com.google.developers.mojimaster2.notification.NotificationReceiver;
 import com.google.developers.mojimaster2.paging.SmileyViewModel;
 import com.google.developers.mojimaster2.paging.SmileyViewModelFactory;
@@ -46,7 +51,8 @@ public class MainActivity extends AppCompatActivity implements AnswersView.OnAns
     private LiveData<List<Smiley>> smileylist;
     LinearLayout linearLayout;
     Calendar calendar;
-    JobScheduler jobScheduler;
+    private static final long ONE_DAY_INTERVAL = 24 * 60 * 60 * 1000L; // 1 Day
+    private static final long ONE_WEEK_INTERVAL = 7 * 24 * 60 * 60 * 1000L; // 1 Week
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +94,8 @@ public class MainActivity extends AppCompatActivity implements AnswersView.OnAns
         smileyViewModel.getRandomSmiley().observe(this, new Observer<List<Smiley>>() {
             @Override
             public void onChanged(List<Smiley> smilies) {
-                myAlarm(smilies); // Calling the alarm function...
+              //  myAlarm(smilies); // Calling the alarm function...
+                NotificationJobService.schedule(MainActivity.this, 900000, smilies);
             }
         });
 

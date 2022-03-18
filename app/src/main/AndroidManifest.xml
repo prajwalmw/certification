@@ -52,6 +52,10 @@
         <receiver
             android:name=".notification.NotificationReceiver"></receiver>
 
+        <service
+            android:name=".jobscheduler.NotificationJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
+
     </application>
 
 </manifest>
