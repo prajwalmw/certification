@@ -25,6 +25,7 @@ public abstract class SmileyDatabase extends RoomDatabase {
     public abstract SmileyDao smileyDao();
 
     private static volatile SmileyDatabase sInstance = null;
+    public static final String DATABASE_NAME = "moji";
 
     /**
      * Returns an instance of Room Database.
@@ -36,8 +37,7 @@ public abstract class SmileyDatabase extends RoomDatabase {
     public static synchronized SmileyDatabase getInstance(final Context context) {
         if (sInstance == null) {
             synchronized (SmileyDatabase.class) {
-                if (sInstance == null) {
-                    sInstance = Room.databaseBuilder(context, SmileyDatabase.class, "moji.db")
+                sInstance = Room.databaseBuilder(context, SmileyDatabase.class, DATABASE_NAME)
                             .build();
 
 
@@ -49,7 +49,6 @@ public abstract class SmileyDatabase extends RoomDatabase {
                     }).start();
                     //TODO create a database instance and fill with data from JSON
                 }
-            }
         }
         return sInstance;
     }

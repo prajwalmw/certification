@@ -25,7 +25,7 @@ public class SmileyViewModel extends ViewModel {
     }
 
     public void save(Smiley smiley) {
-
+        mRepository.insert(smiley);
     }
 
     public void delete(Smiley smiley) {
@@ -34,6 +34,10 @@ public class SmileyViewModel extends ViewModel {
 
     public LiveData<List<Smiley>> getListLiveData() {
         return listLiveData;
+    }
+
+    public LiveData<List<Smiley>> getRandomSmiley() {
+        return mRepository.getRandomSmileys(1);
     }
 
 }

@@ -2,12 +2,8 @@ package com.google.developers.mojimaster2;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -22,8 +18,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.emoji.bundled.BundledEmojiCompatConfig;
 import androidx.emoji.text.EmojiCompat;
 import androidx.emoji.widget.EmojiAppCompatTextView;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -32,11 +28,12 @@ import com.google.developers.mojimaster2.game.AnswersView;
 import com.google.developers.mojimaster2.game.GameViewModel;
 import com.google.developers.mojimaster2.game.GameViewModelFactory;
 import com.google.developers.mojimaster2.game.Result;
+import com.google.developers.mojimaster2.notification.NotificationReceiver;
 import com.google.developers.mojimaster2.paging.SmileyViewModel;
 import com.google.developers.mojimaster2.paging.SmileyViewModelFactory;
-import com.google.developers.mojimaster2.service.NotificationJobService;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements AnswersView.OnAnswerListener{
@@ -45,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements AnswersView.OnAns
     private AnswersView mAnswersView;
     private TextView mResult;
     private GameViewModel mGameViewModel;
+    private SmileyViewModel smileyViewModel;
+    private LiveData<List<Smiley>> smileylist;
     LinearLayout linearLayout;
     Calendar calendar;
     JobScheduler jobScheduler;
@@ -54,7 +53,13 @@ public class MainActivity extends AppCompatActivity implements AnswersView.OnAns
         super.onCreate(savedInstanceState);
 
         GameViewModelFactory viewModelFactory = GameViewModelFactory.createFactory(this);
-        mGameViewModel = ViewModelProviders.of(this, viewModelFactory).get(GameViewModel.class);
+        mGameViewModel = ViewModelProviders.of(this, viewModelFactory)
+                .get(GameViewModel.class);
+
+        SmileyViewModelFactory smileyViewModelFactory = SmileyViewModelFactory.createFactory(this);
+        smileyViewModel = ViewModelProviders.of(this, smileyViewModelFactory)
+                .get(SmileyViewModel.class);
+
 
         EmojiCompat.Config config = new BundledEmojiCompatConfig(this);
         EmojiCompat.init(config);
@@ -74,24 +79,19 @@ public class MainActivity extends AppCompatActivity implements AnswersView.OnAns
         mGameViewModel.getCurrentAnswer().observe(this, this::updateContent);
         mGameViewModel.getResults().observe(this, this::showResults);
 
-//        viewModelFactory =
-//        viewModelFactory = new SmileyViewModelFactory();
-//        smileyViewModel = ViewModelProviders.of(this).get(SmileyViewModel.class);
-//        smileyViewModel.getListLiveData().observe(this, new Observer<List<Smiley>>() {
-//            @Override
-//            public void onChanged(List<Smiley> smilies) {
-//                mAnswersView.loadAnswers(smilies);
-//            }
-//        });
-
-        mGameViewModel.loadSmileys().observe(this, this::loadRound);
+        mGameViewModel.setUpGame().observe(this, this::loadRound);
 
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(this::loadNewGame);
 
+        smileyViewModel.getRandomSmiley().observe(this, new Observer<List<Smiley>>() {
+            @Override
+            public void onChanged(List<Smiley> smilies) {
+                myAlarm(smilies); // Calling the alarm function...
+            }
+        });
 
-        NotificationJobService.schedule(this, NotificationJobService.ONE_DAY_INTERVAL);
     }
 
     /**
@@ -113,6 +113,7 @@ public class MainActivity extends AppCompatActivity implements AnswersView.OnAns
      * Load answers for the next round.
      */
     private void loadRound(List<Smiley> smileys) {
+
         mAnswersView.loadAnswers(smileys);
         mGameViewModel.startNewGameRound();
     }
@@ -124,6 +125,7 @@ public class MainActivity extends AppCompatActivity implements AnswersView.OnAns
         if (result == null) {
             return;
         }
+
         mResult.setTextColor(getColor(result.getColor()));
         mResult.setText(getString(result.getResult()));
 
@@ -136,6 +138,7 @@ public class MainActivity extends AppCompatActivity implements AnswersView.OnAns
         if (smiley == null) {
             return;
         }
+
         mQuestionView.setText(smiley.getEmoji());
     }
 
@@ -175,5 +178,31 @@ public class MainActivity extends AppCompatActivity implements AnswersView.OnAns
     @Override
     public void onAnswerSelected(String answer) {
         Log.d("PRAJL","PRAJL: "+answer);
+    }
+
+    public void myAlarm(List<Smiley> smilies) {
+      //  smileylist = smileyViewModel.getRandomSmiley();
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 23); //11:00 PM
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+
+        if (calendar.getTime().compareTo(new Date()) < 0)
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+
+        Intent intent = new Intent(getApplicationContext(), NotificationReceiver.class);
+        intent.putExtra("smiley_face", smilies.get(0).getEmoji());
+        intent.putExtra("smiley_unicode", smilies.get(0).getCode());
+        intent.putExtra("smiley_name", smilies.get(0).getName());
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),
+                0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        if (alarmManager != null) {
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                    AlarmManager.INTERVAL_DAY, pendingIntent);
+
+        }
+
     }
 }

@@ -44,6 +44,7 @@ public class DataRepository {
     {
         return mDao.getAll();
     }
+
     public DataSource.Factory<Integer, Smiley> getSmileys() {
         return null;
     }
@@ -54,6 +55,15 @@ public class DataRepository {
 
     public void delete(Smiley smiley) {
         mIoExecutor.execute(() -> mDao.delete(smiley));
+    }
+
+    public void insert(Smiley smiley) {
+        mIoExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                mDao.insert(smiley);
+            }
+        });
     }
 
     public Smiley getSmiley() {

@@ -65,6 +65,19 @@ public class AnswersView extends RadioGroup implements RadioGroup.OnCheckedChang
         super.setEnabled(enabled);
     }
 
+    /**
+     * <p>Clears the selection. When the selection is cleared, no radio button
+     * in this group is selected and {@link #getCheckedRadioButtonId()} returns
+     * null.</p>
+     *
+     * @see #check(int)
+     * @see #getCheckedRadioButtonId()
+     */
+    @Override
+    public void clearCheck() {
+        super.clearCheck();
+    }
+
     public interface OnAnswerListener {
         void onAnswerSelected(String answer);
     }

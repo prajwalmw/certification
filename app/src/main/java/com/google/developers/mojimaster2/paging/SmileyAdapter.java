@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SmileyAdapter extends PagedListAdapter<Smiley, SmileyAdapter.SmileyViewHolder> {
-List<Smiley> smileyList = new ArrayList<>();
+    List<Smiley> smileyList = new ArrayList<>();
     public SmileyAdapter() {
         super(DIFF_CALLBACK);
     }

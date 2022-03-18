@@ -1,56 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingTop="10dp"
     android:paddingBottom="10dp"
-    android:paddingHorizontal="5dp">
-
-    <LinearLayout
-        android:id="@+id/smile_linear_item"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/id_unicode"
-        app:layout_constrainedWidth="true"
-        android:gravity="center_vertical"
-        >
-
+    android:layout_marginHorizontal="5dp">
 
     <androidx.emoji.widget.EmojiAppCompatTextView
         android:id="@+id/emoji_id"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Emoji"
-       />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/id_text"
+        app:layout_constraintHorizontal_weight="0.5"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textAlignment="center"
+        android:text="😹" />
 
     <TextView
         android:id="@+id/id_text"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:text="Prajwal wsdssdsdsdsdsdsdsdsdsddsdsdsdsdsdsdsdsdsdsdsdsds"
-        />
-
-    </LinearLayout>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/emoji_id"
+        app:layout_constraintEnd_toStartOf="@+id/id_unicode"
+        app:layout_constraintHorizontal_weight="4"
+        android:textAlignment="center"
+        android:text="Prajwal wsdssdsdsdsdsdsdsdsdsddsdsdsdsdsdsdsdsdsdsdsdsds" />
 
     <TextView
         android:id="@+id/id_unicode"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:text="Unicode"
-        android:layout_marginStart="5dp"
-
-        />
+        app:layout_constraintStart_toEndOf="@+id/id_text"
+        android:text="U+1F620"
+        android:textAlignment="center"
+        app:layout_constraintHorizontal_weight="1"
+        android:layout_marginStart="5dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

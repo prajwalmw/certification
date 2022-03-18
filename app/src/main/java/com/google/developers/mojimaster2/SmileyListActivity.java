@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.emoji.bundled.BundledEmojiCompatConfig;
 import androidx.emoji.text.EmojiCompat;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -36,7 +37,12 @@ public class SmileyListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         SmileyViewModelFactory smileyViewModelFactory = SmileyViewModelFactory.createFactory(this);
         mViewModel = ViewModelProviders.of(this, smileyViewModelFactory).get(SmileyViewModel.class);
-        mViewModel.getListLiveData().observe(this, this::loadSmileyList);
+        mViewModel.getListLiveData().observe(this, new Observer<List<Smiley>>() {
+            @Override
+            public void onChanged(List<Smiley> smilies) {
+                loadSmileyList(smilies);
+            }
+        });
         EmojiCompat.init(new BundledEmojiCompatConfig(this));
 
         setContentView(R.layout.activity_smileys);
@@ -82,7 +88,7 @@ public class SmileyListActivity extends AppCompatActivity {
 
                 String text = getString(R.string.undo_deleted, smiley.getEmoji());
                 Snackbar.make(mFab, text, Snackbar.LENGTH_LONG)
-                        .setAction("Undo", view -> mViewModel.save(smiley)).show();
+                        .setAction("Undo", view -> mViewModel.save(smiley)).show(); // single insert operation...
             }
         });
 
