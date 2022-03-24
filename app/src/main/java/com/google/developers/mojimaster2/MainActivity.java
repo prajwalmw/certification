@@ -1,12 +1,7 @@
 package com.google.developers.mojimaster2;
 
-import static com.google.developers.mojimaster2.SettingActivity.SettingsFragment.JOB_ID;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.app.job.JobInfo;
-import android.app.job.JobScheduler;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +20,13 @@ import androidx.emoji.widget.EmojiAppCompatTextView;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.work.Constraints;
+import androidx.work.Data;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.developers.mojimaster2.data.Smiley;
@@ -33,13 +35,15 @@ import com.google.developers.mojimaster2.game.GameViewModel;
 import com.google.developers.mojimaster2.game.GameViewModelFactory;
 import com.google.developers.mojimaster2.game.Result;
 import com.google.developers.mojimaster2.jobscheduler.NotificationJobService;
-import com.google.developers.mojimaster2.notification.NotificationReceiver;
+import com.google.developers.mojimaster2.alarmanager_broadcastreceiver_notification.NotificationReceiver;
 import com.google.developers.mojimaster2.paging.SmileyViewModel;
 import com.google.developers.mojimaster2.paging.SmileyViewModelFactory;
+import com.google.developers.mojimaster2.workmanager_notification.NotificationWorkManager;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity implements AnswersView.OnAnswerListener{
 
@@ -53,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements AnswersView.OnAns
     Calendar calendar;
     private static final long ONE_DAY_INTERVAL = 24 * 60 * 60 * 1000L; // 1 Day
     private static final long ONE_WEEK_INTERVAL = 7 * 24 * 60 * 60 * 1000L; // 1 Week
+    Data.Builder data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,11 +71,9 @@ public class MainActivity extends AppCompatActivity implements AnswersView.OnAns
         smileyViewModel = ViewModelProviders.of(this, smileyViewModelFactory)
                 .get(SmileyViewModel.class);
 
-
         EmojiCompat.Config config = new BundledEmojiCompatConfig(this);
         EmojiCompat.init(config);
         setContentView(R.layout.activity_main);
-//        mAnswersView = findViewById(R.id.ans_view);
         mAnswersView = new AnswersView(this);
         mAnswersView.setOnAnswerListener(this::onAnswersChange);
         linearLayout = findViewById(R.id.linear_radio);
@@ -84,9 +87,7 @@ public class MainActivity extends AppCompatActivity implements AnswersView.OnAns
 
         mGameViewModel.getCurrentAnswer().observe(this, this::updateContent);
         mGameViewModel.getResults().observe(this, this::showResults);
-
         mGameViewModel.setUpGame().observe(this, this::loadRound);
-
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(this::loadNewGame);
@@ -94,8 +95,27 @@ public class MainActivity extends AppCompatActivity implements AnswersView.OnAns
         smileyViewModel.getRandomSmiley().observe(this, new Observer<List<Smiley>>() {
             @Override
             public void onChanged(List<Smiley> smilies) {
-              //  myAlarm(smilies); // Calling the alarm function...
-                NotificationJobService.schedule(MainActivity.this, 900000, smilies);
+              //  myAlarm(smilies); // Calling the alarm function... *** AlarmManager + BroadcastReceiver ***
+               // NotificationJobService.schedule(MainActivity.this, 900000, smilies); // *** Jobscheduler ***
+
+                data = new Data.Builder();
+                data.putString("title", getResources().getString(R.string.notification_title,
+                        smilies.get(0).getEmoji(), smilies.get(0).getCode()));
+                data.putString("text", smilies.get(0).getName()); // Step 2 *** Data to be sent to WorkManager.
+
+                PeriodicWorkRequest uploadWorkRequest =
+                        new PeriodicWorkRequest.Builder(NotificationWorkManager.class,
+                                20,
+                                TimeUnit.MINUTES)
+                                .setInputData(data.build())
+                                .build();  // WorkRequest added. Step 3 ****
+
+                // Mostly, in case of Periodic works duplicate works could happen.
+                // So use this so that only one worker is enqueued at a time...
+                WorkManager.getInstance(MainActivity.this)
+                        .enqueueUniquePeriodicWork("uniqueWorkName",
+                                ExistingPeriodicWorkPolicy.KEEP,
+                                uploadWorkRequest);  // Step 4 *** WorkManager instance is added.
             }
         });
 

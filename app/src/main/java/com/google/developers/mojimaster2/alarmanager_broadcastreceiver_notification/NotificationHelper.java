@@ -1,4 +1,4 @@
-package com.google.developers.mojimaster2.notification;
+package com.google.developers.mojimaster2.alarmanager_broadcastreceiver_notification;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;

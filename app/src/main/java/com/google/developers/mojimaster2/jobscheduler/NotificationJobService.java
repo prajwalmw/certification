@@ -27,6 +27,7 @@ import java.util.List;
  * Github: prajwalmw
  */
 
+// Register this service in Manifest file.
 // Jobscheduler: Doesnt work when app is killed... works only in Foreground...
 public class NotificationJobService extends JobService {
     private static final String NOTIFICATION_CHANNEL_ID = "10001";

@@ -1,11 +1,8 @@
-package com.google.developers.mojimaster2.notification;
+package com.google.developers.mojimaster2.alarmanager_broadcastreceiver_notification;
 
-import android.app.job.JobScheduler;
-import android.app.job.JobService;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
 
 /**
  * Created by Prajwal Maruti Waingankar on 12-03-2022, 21:10
@@ -13,7 +10,7 @@ import android.os.Handler;
  * Email: prajwalwaingankar@gmail.com
  * Github: prajwalmw
  */
-
+// Register this receiver in Manifest file.
 public class NotificationReceiver extends BroadcastReceiver {
 
     @Override
