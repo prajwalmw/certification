@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements AnswersView.OnAns
               //  myAlarm(smilies); // Calling the alarm function... *** AlarmManager + BroadcastReceiver ***
                // NotificationJobService.schedule(MainActivity.this, 900000, smilies); // *** Jobscheduler ***
 
-                data = new Data.Builder();
+             /*   data = new Data.Builder();
                 data.putString("title", getResources().getString(R.string.notification_title,
                         smilies.get(0).getEmoji(), smilies.get(0).getCode()));
                 data.putString("text", smilies.get(0).getName()); // Step 2 *** Data to be sent to WorkManager.
@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements AnswersView.OnAns
                 WorkManager.getInstance(MainActivity.this)
                         .enqueueUniquePeriodicWork("uniqueWorkName",
                                 ExistingPeriodicWorkPolicy.KEEP,
-                                uploadWorkRequest);  // Step 4 *** WorkManager instance is added.
+                                uploadWorkRequest);  // Step 4 *** WorkManager instance is added.*/
             }
         });
 

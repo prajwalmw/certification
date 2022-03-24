@@ -31,38 +31,48 @@ import java.util.List;
 // Jobscheduler: Doesnt work when app is killed... works only in Foreground...
 public class NotificationJobService extends JobService {
     private static final String NOTIFICATION_CHANNEL_ID = "10001";
-    private static final int JOB_ID = 1;
-    private static List<Smiley> smilies;
+    public static final int JOB_ID = 28;
+   // private static List<Smiley> smilies;
+  //  private static boolean switchStatus = false;
 
-    public static void schedule(Context context, long intervalMillis, List<Smiley> smilies) {
+/*
+    public static void schedule(Context context, long intervalMillis, List<Smiley> smilies,
+                                boolean switchStatus) {
         setSmilies(smilies);
         JobScheduler jobScheduler = (JobScheduler)
                 context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
         ComponentName componentName =
                 new ComponentName(context, NotificationJobService.class);
         JobInfo.Builder builder = new JobInfo.Builder(JOB_ID, componentName);
-        builder.setPeriodic(900000, 45000); // 5% of the period also use flex time for > Nougat.
-        jobScheduler.schedule(builder.build());
+        builder.setPersisted(true); // Remains scheduled through app restarts and device reboots.
+        builder.setPeriodic(intervalMillis, 45000); // 5% of the period also use flex time for > Nougat.
 
+        if(switchStatus)
+            jobScheduler.schedule(builder.build());
+        else
+            cancel(context);
     }
+*/
 
+/*
     public static void cancel(Context context) {
         JobScheduler jobScheduler = (JobScheduler)
                 context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
         jobScheduler.cancel(JOB_ID);
     }
+*/
 
-    public static List<Smiley> getSmilies() {
+   /* public static List<Smiley> getSmilies() {
         return smilies;
     }
 
     public static void setSmilies(List<Smiley> smilies) {
         NotificationJobService.smilies = smilies;
-    }
+    }*/
 
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
-        List<Smiley> smilies = getSmilies();
+      //  List<Smiley> smilies = getSmilies();
         /* executing a task synchronously */
        // if (/* condition for finishing it */) {
             // To finish a periodic JobService,
@@ -77,8 +87,9 @@ public class NotificationJobService extends JobService {
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
                 .setContentTitle(getResources().getString(R.string.notification_title,
-                        smilies.get(0).getEmoji(), smilies.get(0).getCode()))
-                .setContentText(smilies.get(0).getName())
+                        jobParameters.getExtras().getString("emoji"),
+                        jobParameters.getExtras().getString("code")))
+                .setContentText(jobParameters.getExtras().getString("name")) // extras livedata that was passed.
                 .setContentIntent(contentPendingIntent)
                 .setSmallIcon(R.drawable.ic_mood)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)

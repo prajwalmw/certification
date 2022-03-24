@@ -3,6 +3,7 @@ package com.google.developers.mojimaster2;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -17,6 +18,13 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.developers.mojimaster2.add.AddViewModel;
 import com.google.developers.mojimaster2.add.AddViewModelFactory;
 
+import org.apache.commons.text.StringEscapeUtils;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+
 /**
  * Saves a Smiley to local data source and shows a hex value of character.
  */
@@ -25,6 +33,7 @@ public class AddSmileyActivity extends AppCompatActivity implements TextWatcher 
     private AddViewModel mViewModel;
     private EmojiAppCompatEditText mEmojiEditText;
     private TextInputEditText mName;
+    private TextView mUnicode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +47,7 @@ public class AddSmileyActivity extends AppCompatActivity implements TextWatcher 
 
         mEmojiEditText = findViewById(R.id.emoji_char);
         mEmojiEditText.addTextChangedListener(this);
-        TextView mUnicode = findViewById(R.id.emoji_unicode);
+        mUnicode = findViewById(R.id.emoji_unicode);
         mName = findViewById(R.id.emoji_name);
 
         Button mSave = findViewById(R.id.save);
@@ -60,6 +69,11 @@ public class AddSmileyActivity extends AppCompatActivity implements TextWatcher 
     @Override
     public void afterTextChanged(Editable editable) {
         String text = editable.toString();
+        if(!text.equalsIgnoreCase("")) {
+            int codepoint = text.codePointAt(0); // returns the unicode code point for the provided text.
+            String yourUnicode = "U+" + Integer.toHexString(codepoint);
+            mUnicode.setText(yourUnicode);
+        }
 
     }
 
