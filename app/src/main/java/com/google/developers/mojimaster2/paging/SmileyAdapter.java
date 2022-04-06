@@ -70,7 +70,7 @@ public class SmileyAdapter extends PagedListAdapter<Smiley, SmileyAdapter.Smiley
         }
 
         void bindTo(Smiley smiley) {
-            // mSmiley = smiley;
+            mSmiley = smiley;
             mEmoji.setText(smiley.getEmoji());
             mName.setText(smiley.getName());
             mUnicode.setText(smiley.getCode());
