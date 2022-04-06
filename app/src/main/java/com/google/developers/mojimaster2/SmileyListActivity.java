@@ -48,7 +48,7 @@ public class SmileyListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_smileys);
         mRecycler = findViewById(R.id.recycler_view_smiley);
 
-         adapter = new SmileyAdapter();
+         adapter = new SmileyAdapter(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRecycler.setLayoutManager(linearLayoutManager);
         initAction();
@@ -61,7 +61,7 @@ public class SmileyListActivity extends AppCompatActivity {
     }
 
     private void loadSmileyList(List<Smiley> smilies) {
-        adapter.setData(smilies);
+       // adapter.setData(smilies);
         mRecycler.setAdapter(adapter);
     }
 

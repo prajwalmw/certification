@@ -178,7 +178,6 @@ public class MainActivity extends AppCompatActivity implements AnswersView.OnAns
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
         switch (id) {
             case R.id.action_list:
                 Intent listIntent = new Intent(this, SmileyListActivity.class);
@@ -193,7 +192,6 @@ public class MainActivity extends AppCompatActivity implements AnswersView.OnAns
                 startActivity(settingIntent);
                 return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
