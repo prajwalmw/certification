@@ -61,7 +61,7 @@ public class DataRepository {
         });
     }
 
-    public Smiley getSmiley() {
+    public Smiley getSmiley() { // what is this use????
         try {
             return mIoExecutor.submit(mDao::getSmiley).get();
         } catch (InterruptedException | ExecutionException e) {

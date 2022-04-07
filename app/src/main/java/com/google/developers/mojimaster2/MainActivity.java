@@ -3,6 +3,8 @@ package com.google.developers.mojimaster2;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -20,6 +22,8 @@ import androidx.emoji.widget.EmojiAppCompatTextView;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceManager;
 import androidx.work.Constraints;
 import androidx.work.Data;
 import androidx.work.ExistingPeriodicWorkPolicy;
@@ -45,7 +49,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class MainActivity extends AppCompatActivity implements AnswersView.OnAnswerListener{
+public class MainActivity extends AppCompatActivity implements AnswersView.OnAnswerListener,
+        SharedPreferences.OnSharedPreferenceChangeListener{
 
     private EmojiAppCompatTextView mQuestionView;
     private AnswersView mAnswersView;
@@ -55,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements AnswersView.OnAns
     private LiveData<List<Smiley>> smileylist;
     LinearLayout linearLayout;
     Calendar calendar;
+    SharedPreferences sp;
     private static final long ONE_DAY_INTERVAL = 24 * 60 * 60 * 1000L; // 1 Day
     private static final long ONE_WEEK_INTERVAL = 7 * 24 * 60 * 60 * 1000L; // 1 Week
     Data.Builder data;
@@ -62,6 +68,11 @@ public class MainActivity extends AppCompatActivity implements AnswersView.OnAns
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        sp = PreferenceManager.getDefaultSharedPreferences(this);
+        sp.getString(getString(R.string.pref_key_answers), "4");
+        sp.registerOnSharedPreferenceChangeListener(this);
+
 
         GameViewModelFactory viewModelFactory = GameViewModelFactory.createFactory(this);
         mGameViewModel = ViewModelProviders.of(this, viewModelFactory)
@@ -87,7 +98,12 @@ public class MainActivity extends AppCompatActivity implements AnswersView.OnAns
 
         mGameViewModel.getCurrentAnswer().observe(this, this::updateContent);
         mGameViewModel.getResults().observe(this, this::showResults);
-        mGameViewModel.setUpGame().observe(this, this::loadRound);
+        mGameViewModel.setUpGame().observe(this, new Observer<List<Smiley>>() {
+            @Override
+            public void onChanged(List<Smiley> smilies) {
+                loadRound(smilies);
+            }
+        });
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(this::loadNewGame);
@@ -226,8 +242,26 @@ public class MainActivity extends AppCompatActivity implements AnswersView.OnAns
         if (alarmManager != null) {
             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                     AlarmManager.INTERVAL_DAY, pendingIntent);
-
         }
+    }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key1) {
+        if(key1.equals(getString(R.string.pref_key_answers))) {
+            int limit = Integer.parseInt(sp.getString(key1, "4"));
+            mGameViewModel.loadSmileys(limit).observe(this, new Observer<List<Smiley>>() {
+                @Override
+                public void onChanged(List<Smiley> smilies) {
+                    loadRound(smilies);
+                }
+            });
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .unregisterOnSharedPreferenceChangeListener(this);
     }
 }

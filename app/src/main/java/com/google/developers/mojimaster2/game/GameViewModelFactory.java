@@ -46,6 +46,7 @@ public class GameViewModelFactory implements ViewModelProvider.Factory {
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+      //  return (T) new GameViewModel(mRepository, mAnswerLimit);
         try {
             return modelClass.getConstructor(DataRepository.class, int.class)
                     .newInstance(mRepository, mAnswerLimit);
@@ -54,4 +55,5 @@ public class GameViewModelFactory implements ViewModelProvider.Factory {
             throw new RuntimeException("Cannot create an instance of " + modelClass, e);
         }
     }
+
 }

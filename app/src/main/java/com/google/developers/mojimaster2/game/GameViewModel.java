@@ -41,7 +41,7 @@ public class GameViewModel extends ViewModel {
      */
     public MediatorLiveData<List<Smiley>> setUpGame() {
         if (mSmileys == null) {
-            mSmileysMediator.addSource(loadSmileys(), mSmileysMediator::setValue);
+            mSmileysMediator.addSource(loadSmileys(mLimitSmiley), mSmileysMediator::setValue);
         }
 
         return mSmileysMediator;
@@ -52,7 +52,7 @@ public class GameViewModel extends ViewModel {
      */
     public void resetGame() {
         mSmileysMediator.removeSource(mSmileys);
-        mSmileysMediator.addSource(loadSmileys(), mSmileysMediator::setValue);
+        mSmileysMediator.addSource(loadSmileys(mLimitSmiley), mSmileysMediator::setValue);
 
         mCorrectScore = 0;
         mIncorrectScore = 0;
@@ -62,8 +62,9 @@ public class GameViewModel extends ViewModel {
         return mCurrentSmiley;
     }
 
-    public LiveData<List<Smiley>> loadSmileys() {
-        mSmileys = mRepository.getRandomSmileys(mLimitSmiley);
+    public LiveData<List<Smiley>> loadSmileys(int limit) {
+        mLimitSmiley = limit;
+        mSmileys = mRepository.getRandomSmileys(limit);
         Log.d("PRAJ", "PRAJ: "+mSmileys.getValue());
         return mSmileys;
     }
