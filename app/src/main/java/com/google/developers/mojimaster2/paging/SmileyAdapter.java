@@ -1,9 +1,11 @@
 package com.google.developers.mojimaster2.paging;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.emoji.widget.EmojiAppCompatTextView;
@@ -18,29 +20,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SmileyAdapter extends PagedListAdapter<Smiley, SmileyAdapter.SmileyViewHolder> {
-    List<Smiley> smileyList = new ArrayList<>();
-    public SmileyAdapter() {
+    // List<Smiley> smileyList = new ArrayList<>();
+    Context mContext;
+
+    public SmileyAdapter(Context context) {
         super(DIFF_CALLBACK);
+        this.mContext = context;
     }
 
     @NonNull
     @Override
     public SmileyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
+        View itemView = LayoutInflater.from(mContext)
                 .inflate(R.layout.smiley_list_item, parent, false);
         return new SmileyViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull SmileyViewHolder holder, int position) {
-        Smiley item = smileyList.get(position);
-        holder.bindTo(item);
+        Smiley item = getItem(position);
+        if (item != null) {
+            holder.bindTo(item);
+        } else {
+            Toast.makeText(mContext, "Item is null", Toast.LENGTH_LONG).show();
+        }
     }
 
-    public void setData(List<Smiley> smilies) {
+   /* public void setData(List<Smiley> smilies) {
         smileyList.clear();
         smileyList.addAll(smilies);
-    }
+    }*/
 
     public class SmileyViewHolder extends RecyclerView.ViewHolder {
 
@@ -72,18 +81,18 @@ public class SmileyAdapter extends PagedListAdapter<Smiley, SmileyAdapter.Smiley
             new DiffUtil.ItemCallback<Smiley>() {
                 @Override
                 public boolean areItemsTheSame(@NonNull Smiley oldItem, @NonNull Smiley newItem) {
-                    return oldItem.getName().equals(newItem.getName());
+                    return oldItem.getName() == newItem.getName();
                 }
 
                 @Override
                 public boolean areContentsTheSame(@NonNull Smiley oldItem,
                                                   @NonNull Smiley newItem) {
-                    return oldItem == newItem;
+                    return newItem.equals(oldItem);
                 }
             };
 
-    @Override
-    public int getItemCount() {
-        return smileyList.size();
-    }
+//    @Override
+//    public int getItemCount() {
+//        return smileyList.size();
+//    }
 }

@@ -40,14 +40,9 @@ public class DataRepository {
         mDao = dao;
     }
 
-    public LiveData<List<Smiley>> getALL_smilies()
-    {
-        return mDao.getAll();
-    }
-
     public DataSource.Factory<Integer, Smiley> getSmileys() {
-        return null;
-    }
+        return mDao.getAllSmileys();
+    }  // Paging Library Data source
 
     public LiveData<List<Smiley>> getRandomSmileys(int limit) {
         return mDao.getRandom(limit);

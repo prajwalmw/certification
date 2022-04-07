@@ -39,6 +39,7 @@ public class AddViewModel extends ViewModel {
 
     public void save(Smiley smiley) {
         //TODO save a smiley
+        mRepository.insert(smiley);
     }
 
     /**

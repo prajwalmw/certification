@@ -1,11 +1,14 @@
 package com.google.developers.mojimaster2.data;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import static com.google.developers.mojimaster2.data.DataSmileyName.*;
+
+import java.util.HashMap;
 
 /**
  * A Model class that holds information about the emoji.
@@ -45,4 +48,8 @@ public class Smiley {
         return mEmoji;
     }
 
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return super.equals(obj);
+    }
 }

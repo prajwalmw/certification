@@ -63,6 +63,7 @@ public class AddSmileyActivity extends AppCompatActivity implements TextWatcher 
             return;
         }
 
+        mViewModel.save(emoji, name);
         finish();
     }
 

@@ -37,20 +37,15 @@ public class SmileyListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         SmileyViewModelFactory smileyViewModelFactory = SmileyViewModelFactory.createFactory(this);
         mViewModel = ViewModelProviders.of(this, smileyViewModelFactory).get(SmileyViewModel.class);
-        mViewModel.getListLiveData().observe(this, new Observer<List<Smiley>>() {
-            @Override
-            public void onChanged(List<Smiley> smilies) {
-                loadSmileyList(smilies);
-            }
-        });
         EmojiCompat.init(new BundledEmojiCompatConfig(this));
 
         setContentView(R.layout.activity_smileys);
         mRecycler = findViewById(R.id.recycler_view_smiley);
-
-         adapter = new SmileyAdapter();
+        adapter = new SmileyAdapter(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRecycler.setLayoutManager(linearLayoutManager);
+        mViewModel.getSmileyPagedList().observe(this, adapter::submitList);
+        mRecycler.setAdapter(adapter);
         initAction();
 
         mFab = findViewById(R.id.fab);
@@ -58,11 +53,6 @@ public class SmileyListActivity extends AppCompatActivity {
             Intent intent = new Intent(this, AddSmileyActivity.class);
             startActivity(intent);
         });
-    }
-
-    private void loadSmileyList(List<Smiley> smilies) {
-        adapter.setData(smilies);
-        mRecycler.setAdapter(adapter);
     }
 
     public void initAction() {

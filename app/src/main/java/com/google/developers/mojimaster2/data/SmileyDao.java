@@ -1,6 +1,7 @@
 package com.google.developers.mojimaster2.data;
 
 import androidx.lifecycle.LiveData;
+import androidx.paging.DataSource;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -19,7 +20,7 @@ public interface SmileyDao {
      * Returns all data in table for Paging.
      */
     @Query("SELECT * FROM smiley ORDER BY name ASC")
-    LiveData<List<Smiley>> getAll();
+    DataSource.Factory<Integer, Smiley> getAllSmileys();
 
     /**
      * Returns LiveData of random Smileys.
