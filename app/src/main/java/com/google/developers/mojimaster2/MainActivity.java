@@ -13,9 +13,13 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.emoji.bundled.BundledEmojiCompatConfig;
 import androidx.emoji.text.EmojiCompat;
 import androidx.emoji.widget.EmojiAppCompatTextView;
@@ -33,6 +37,7 @@ import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 import com.google.developers.mojimaster2.data.Smiley;
 import com.google.developers.mojimaster2.game.AnswersView;
 import com.google.developers.mojimaster2.game.GameViewModel;
@@ -50,7 +55,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity implements AnswersView.OnAnswerListener,
-        SharedPreferences.OnSharedPreferenceChangeListener{
+        SharedPreferences.OnSharedPreferenceChangeListener,
+        NavigationView.OnNavigationItemSelectedListener{
 
     private EmojiAppCompatTextView mQuestionView;
     private AnswersView mAnswersView;
@@ -64,6 +70,8 @@ public class MainActivity extends AppCompatActivity implements AnswersView.OnAns
     private static final long ONE_DAY_INTERVAL = 24 * 60 * 60 * 1000L; // 1 Day
     private static final long ONE_WEEK_INTERVAL = 7 * 24 * 60 * 60 * 1000L; // 1 Week
     Data.Builder data;
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,13 +93,26 @@ public class MainActivity extends AppCompatActivity implements AnswersView.OnAns
         EmojiCompat.Config config = new BundledEmojiCompatConfig(this);
         EmojiCompat.init(config);
         setContentView(R.layout.activity_main);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        drawerLayout = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawerLayout, toolbar, R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close);
+        if (drawerLayout != null) {
+            drawerLayout.addDrawerListener(toggle);
+        }
+        toggle.syncState();
+        navigationView = findViewById(R.id.nav_view);
+        if (navigationView != null) {
+            navigationView.setNavigationItemSelectedListener(this);
+        }
+
+
         mAnswersView = new AnswersView(this);
         mAnswersView.setOnAnswerListener(this::onAnswersChange);
         linearLayout = findViewById(R.id.linear_radio);
         linearLayout.addView(mAnswersView, 1);
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         mQuestionView = findViewById(R.id.question);
         mResult = findViewById(R.id.result);
@@ -263,5 +284,45 @@ public class MainActivity extends AppCompatActivity implements AnswersView.OnAns
         super.onDestroy();
         PreferenceManager.getDefaultSharedPreferences(this)
                 .unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        // Handle navigation view item clicks here.
+        switch (menuItem.getItemId()) {
+            case R.id.nav_add: {
+                // Handle the camera import action (for now display a toast).
+                drawer.closeDrawer(GravityCompat.START);
+                menuItem.setCheckable(false);
+                Intent i = new Intent(MainActivity.this, AddSmileyActivity.class);
+                startActivity(i);
+                return true;
+            }
+            case R.id.nav_list:
+                // Handle the gallery action (for now display a toast).
+                drawer.closeDrawer(GravityCompat.START);
+                menuItem.setCheckable(false);
+                Intent i = new Intent(MainActivity.this, SmileyListActivity.class);
+                startActivity(i);
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * Handles the Back button: closes the nav drawer.
+     */
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer != null) {
+            if (drawer.isDrawerOpen(GravityCompat.START)) {
+                drawer.closeDrawer(GravityCompat.START);
+            } else {
+                super.onBackPressed();
+            }
+        }
     }
 }

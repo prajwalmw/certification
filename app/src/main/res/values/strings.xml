@@ -37,4 +37,7 @@
     <string name="notification_channel_description">Show random emoji in notification.</string>
     <string name="notification_title">Smiley of the Day: %1$s - %2$s</string>
 
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
 </resources>

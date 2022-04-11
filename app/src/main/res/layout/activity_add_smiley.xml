@@ -32,6 +32,7 @@
             android:textColor="@android:color/black"
             android:textSize="60sp"
             android:inputType="textShortMessage"
+            android:contentDescription="Smiley Icon"
             tools:text="🙊" />
 
     </com.google.android.material.textfield.TextInputLayout>
