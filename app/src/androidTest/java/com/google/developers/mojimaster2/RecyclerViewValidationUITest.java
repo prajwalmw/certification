@@ -45,17 +45,20 @@ import org.junit.runner.RunWith;
 public class RecyclerViewValidationUITest {
 
     @Rule
-    public ActivityTestRule activityTestRule = new ActivityTestRule(SmileyListActivity.class);
+    public ActivityTestRule activityTestRule = new ActivityTestRule(MainActivity.class);
 
     @Test
     public void recyclerviewValidation() {
-        onView(withId(R.id.recycler_view_smiley))
-                .check(matches(atPosition(0, hasDescendant(withText("angry face")))));
+
+        onView(withId(R.id.action_list))
+                .perform(click()); // action bar item click of list to open SmileyActivity
+
+        ViewInteraction view = onView(withId(R.id.recycler_view_smiley));
+        view.check(matches(atPosition(0, hasDescendant(withText("angry face")))));
     }
 
     public static Matcher<View> atPosition(final int position, @NonNull final Matcher<View> itemMatcher) {
         checkNotNull(itemMatcher);
-
         return new BoundedMatcher<View, RecyclerView>(RecyclerView.class) {
             @Override
             public void describeTo(Description description) {
