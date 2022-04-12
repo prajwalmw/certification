@@ -8,10 +8,10 @@
     tools:context=".SmileyListActivity">
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_smiley"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:itemCount="0"
-        android:id="@+id/recycler_view_smiley">
+        tools:itemCount="0">
 
     </androidx.recyclerview.widget.RecyclerView>
 

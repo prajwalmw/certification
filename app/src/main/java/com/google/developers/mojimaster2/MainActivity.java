@@ -288,12 +288,12 @@ public class MainActivity extends AppCompatActivity implements AnswersView.OnAns
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+      //  DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         // Handle navigation view item clicks here.
         switch (menuItem.getItemId()) {
             case R.id.nav_add: {
                 // Handle the camera import action (for now display a toast).
-                drawer.closeDrawer(GravityCompat.START);
+                drawerLayout.closeDrawer(GravityCompat.START);
                 menuItem.setCheckable(false);
                 Intent i = new Intent(MainActivity.this, AddSmileyActivity.class);
                 startActivity(i);
@@ -301,7 +301,7 @@ public class MainActivity extends AppCompatActivity implements AnswersView.OnAns
             }
             case R.id.nav_list:
                 // Handle the gallery action (for now display a toast).
-                drawer.closeDrawer(GravityCompat.START);
+                drawerLayout.closeDrawer(GravityCompat.START);
                 menuItem.setCheckable(false);
                 Intent i = new Intent(MainActivity.this, SmileyListActivity.class);
                 startActivity(i);
@@ -316,10 +316,10 @@ public class MainActivity extends AppCompatActivity implements AnswersView.OnAns
      */
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer != null) {
-            if (drawer.isDrawerOpen(GravityCompat.START)) {
-                drawer.closeDrawer(GravityCompat.START);
+       // DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawerLayout != null) {
+            if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                drawerLayout.closeDrawer(GravityCompat.START);
             } else {
                 super.onBackPressed();
             }
