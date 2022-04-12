@@ -44,6 +44,8 @@ import org.junit.runner.RunWith;
 @LargeTest
 public class RecyclerViewValidationUITest {
 
+    // if click and go to other screen is there than this code is good run all times...
+
     @Rule
     public ActivityTestRule activityTestRule = new ActivityTestRule(MainActivity.class);
 
