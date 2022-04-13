@@ -31,6 +31,7 @@
     <string name="pref_key_answers" translatable="false">pref_key_answers</string>
     <string name="pref_answers_title">Number of answers</string>
     <string name="pref_answers_summary">Show number of possible answers.</string>
+    <string name="showtwoanswers">Show two answers</string>
 
     <string name="notification_channel_id" translatable="false">notify-smiley</string>
     <string name="notification_channel_name">Remember the Smiley</string>

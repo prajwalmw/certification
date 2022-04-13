@@ -6,8 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".MainActivity"
-    tools:showIn="@layout/activity_main">
+    tools:context=".MainActivity">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view"
@@ -48,10 +47,10 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="😹" />
 
-<!--            <com.google.developers.mojimaster2.game.AnswersView-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:id="@+id/ans_view" />-->
+            <com.google.developers.mojimaster2.game.AnswersView
+                android:id="@+id/ans_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
 
         </LinearLayout>

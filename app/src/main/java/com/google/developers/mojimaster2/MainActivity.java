@@ -109,14 +109,11 @@ public class MainActivity extends AppCompatActivity implements AnswersView.OnAns
         }
 
 
-        mAnswersView = new AnswersView(this);
-        mAnswersView.setOnAnswerListener(this::onAnswersChange);
-        linearLayout = findViewById(R.id.linear_radio);
-        linearLayout.addView(mAnswersView, 1);
-
+        mAnswersView = findViewById(R.id.ans_view);
         mQuestionView = findViewById(R.id.question);
         mResult = findViewById(R.id.result);
 
+        mAnswersView.setOnAnswerListener(this::onAnswersChange);
         mGameViewModel.getCurrentAnswer().observe(this, this::updateContent);
         mGameViewModel.getResults().observe(this, this::showResults);
         mGameViewModel.setUpGame().observe(this, new Observer<List<Smiley>>() {
