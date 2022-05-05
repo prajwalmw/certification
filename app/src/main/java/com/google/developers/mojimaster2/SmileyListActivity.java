@@ -52,7 +52,7 @@ public class SmileyListActivity extends AppCompatActivity {
 
         mFab = findViewById(R.id.fab);
         mFab.setOnClickListener(view -> {
-            Intent intent = new Intent(this, AddSmileyActivity.class);
+            Intent intent = new Intent(this, TimerActivity.class);
             startActivity(intent);
         });
     }

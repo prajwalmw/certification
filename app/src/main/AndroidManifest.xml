@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.google.developers.mojimaster2">
-
     <!-- permission requires for persisted job in JobScheduler -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
 
     <application
         android:allowBackup="true"
@@ -13,6 +11,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name=".TimerActivity"
+            android:exported="false"
+            android:label="Steep Timer"
+            android:parentActivityName=".MainActivity"
+            />
 
         <meta-data
             android:name="fontProviderRequests"
@@ -20,16 +24,16 @@
 
         <activity
             android:name=".MainActivity"
+            android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"
             android:launchMode="singleTop"
-            android:exported="true">
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".SmileyListActivity"
             android:label="@string/activity_smiley_list"
@@ -38,7 +42,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.google.developers.mojimaster2.MainActivity" />
         </activity>
-
         <activity
             android:name=".AddSmileyActivity"
             android:label="@string/activity_add_smiley"
@@ -47,19 +50,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.google.developers.mojimaster2.SmileyListActivity" />
         </activity>
-
         <activity
             android:name=".SettingActivity"
             android:label="@string/title_activity_setting"
-            android:parentActivityName=".MainActivity"></activity>
+            android:parentActivityName=".MainActivity" />
 
-        <receiver
-            android:name=".alarmanager_broadcastreceiver_notification.NotificationReceiver"></receiver>
+        <receiver android:name=".alarmanager_broadcastreceiver_notification.NotificationReceiver" />
 
         <service
             android:name=".jobscheduler.NotificationJobService"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
-
+            android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
 
 </manifest>
